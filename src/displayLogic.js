@@ -1,9 +1,10 @@
 import { fetchLogic } from "./fetchLogic";
+import { quizLogic } from "./quizLogic";
 
 export const displayLogic = () => {
   const quizContainer = document.getElementById("quiz-container");
   let gameStart = false;
-  let currentQuestionIndex = 0;
+  // let currentQuestionIndex = 0;
 
   const displayButton = () => {
     const button = document.createElement("button");
@@ -16,9 +17,10 @@ export const displayLogic = () => {
     buttonContainer.appendChild(button);
   };
 
-  const incrementIndex = () => currentQuestionIndex++;
+  // const incrementIndex = () => currentQuestionIndex++;
 
-  const setIncrementIndex = () => currentQuestionIndex;
+  // const setIncrementIndex = () => currentQuestionIndex;
+
 
   const displayQuiz = async () => {
     displayButton();
@@ -35,22 +37,19 @@ export const displayLogic = () => {
     quizContainer.addEventListener("click", () => {
       console.log("game started:", gameStart);
 
+      const quizManager = quizLogic()
+      quizManager.answerChoices(results)
+
       const nextButton = document.querySelector(".game-button");
-      nextButton.remove();
+      nextButton.textContent = "Next"
 
-      const firstQ = results[currentQuestionIndex];
-      console.log("first question:", firstQ);
+      
 
-      const question = document.createElement("p");
-      question.classList.toggle("question");
-      question.textContent = firstQ.question;
-      quizContainer.appendChild(question);
+      // incrementIndex();
+      // setIncrementIndex();
+      // console.log("current question index:", currentQuestionIndex);
 
-      incrementIndex();
-      setIncrementIndex();
-      console.log("current question index:", currentQuestionIndex);
 
-      displayButton();
     });
   };
 

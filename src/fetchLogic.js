@@ -12,7 +12,7 @@ export const fetchLogic = () => {
       }
 
       const data = await response.json()
-      console.log("parsed data:", data)
+      console.log("parsed data from fetch:", data)
       return data
     } catch (error){
       console.error("Error fetching data:", error.message);
