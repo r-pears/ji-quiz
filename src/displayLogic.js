@@ -4,7 +4,12 @@ import { quizLogic } from "./quizLogic";
 export const displayLogic = () => {
   const quizContainer = document.getElementById("quiz-container");
   let gameStart = false;
-  // let currentQuestionIndex = 0;
+  let currentQuestionIndex = 0;
+  let quizData = [];
+  const quizManager = quizLogic();
+
+  const incrementIndex = () => currentQuestionIndex++;
+  const setIncrementIndex = () => currentQuestionIndex;
 
   const displayButton = () => {
     const button = document.createElement("button");
@@ -17,41 +22,28 @@ export const displayLogic = () => {
     buttonContainer.appendChild(button);
   };
 
-  // const incrementIndex = () => currentQuestionIndex++;
-
-  // const setIncrementIndex = () => currentQuestionIndex;
-
-
-  const displayQuiz = async () => {
+  const startQuiz = async () => {
     displayButton();
     gameStart = true;
+    quizData = await quizManager.fetchQuiz();
+    console.log("quiz data:", quizData);
+    displayQuiz(quizData);
+  };
 
-    const apiUrl =
-      "https://opentdb.com/api.php?amount=10&category=27&difficulty=easy&type=multiple";
-
-    const fetchManager = fetchLogic();
-    const data = await fetchManager.fetchData(apiUrl);
-    const results = data.results;
-    console.log(results);
-
+  const displayQuiz = (data) => {
     quizContainer.addEventListener("click", () => {
       console.log("game started:", gameStart);
 
-      const quizManager = quizLogic()
-      quizManager.answerChoices(results)
+      quizManager.answerChoices(data);
 
       const nextButton = document.querySelector(".game-button");
-      nextButton.textContent = "Next"
+      nextButton.textContent = "Next";
 
-      
-
-      // incrementIndex();
-      // setIncrementIndex();
-      // console.log("current question index:", currentQuestionIndex);
-
-
+      incrementIndex();
+      setIncrementIndex();
+      console.log("current question index:", currentQuestionIndex);
     });
   };
 
-  return { displayQuiz };
+  return { startQuiz, displayQuiz };
 };
