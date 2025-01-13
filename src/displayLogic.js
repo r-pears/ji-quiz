@@ -7,6 +7,7 @@ export const displayLogic = () => {
   let currentQuestionIndex = 0;
   let quizData = [];
   const quizManager = quizLogic();
+  let counterElement;
 
   const fetchApiData = async () => {
     quizData = await quizManager.fetchQuiz();
@@ -20,7 +21,7 @@ export const displayLogic = () => {
 
     const buttonContainer = document.createElement("div");
     buttonContainer.classList.toggle("button-container");
-    quizContainer.insertAdjacentElement('afterend', buttonContainer);
+    quizContainer.insertAdjacentElement("afterend", buttonContainer);
     buttonContainer.appendChild(button);
 
     await fetchApiData();
@@ -35,50 +36,74 @@ export const displayLogic = () => {
     const buttonContainer = document.querySelector(".button-container");
     buttonContainer.appendChild(nextButton);
 
-    nextButton.addEventListener("click", handleNextQuestion)
+    nextButton.addEventListener("click", handleNextQuestion);
   };
 
   const handleCorrectAnswer = (data) => {
-    const answerItems = document.querySelectorAll(".answer-choice")
-    console.log("answer choices:", answerItems)
+    const answerItems = document.querySelectorAll(".answer-choice");
+    console.log("answer choices:", answerItems);
+    let answerSelected = false;
+
+    const handleClick = (item) => {
+      if (answerSelected) return;
+
+      const answerValue = item.textContent;
+      console.log("answer value:", answerValue);
+
+      if (answerValue === data.correct_answer) {
+        console.log("correct answer");
+        item.classList.toggle("correct");
+      } else {
+        console.log("incorrect answer");
+        item.classList.toggle("incorrect");
+      }
+      answerSelected = true;
+    };
 
     answerItems.forEach((item) => {
-      item.addEventListener("click", () => {
-        const answerValue = item.textContent
-        console.log("answer value:", answerValue)
-        if (answerValue === data.correct_answer) {
-          console.log("correct answer")
-        } else {
-          console.log("incorrect answer")
-        }
-      })
-    
-  })
-  }
+      item.addEventListener("click", () => handleClick(item));
+    });
+  };
 
+  const createQuestionCounter = () => {
+    const pageContainer = document.querySelector(".page-container");
+    const counter = document.createElement("p");
+    counter.classList.toggle("counter");
+    pageContainer.appendChild(counter);
+  };
+
+  const displayQuestionCounter = (data) => {
+    if (!counterElement) {
+      createQuestionCounter()
+    }
+    const counter = document.querySelector(".counter")
+    counter.textContent = `${currentQuestionIndex + 1} / ${data.length}`;
+
+
+  }
   const displayQuiz = () => {
     gameStart = true;
     console.log("game started:", gameStart);
-    
-    if (currentQuestionIndex >= quizData.length ) {
-      quizContainer.innerHTML = ""
-      quizContainer.textContent = "Quiz ended!"
-      return
+
+    if (currentQuestionIndex >= quizData.length) {
+      quizContainer.innerHTML = "";
+      quizContainer.textContent = "Quiz ended!";
+      return;
     }
 
     quizManager.quizQuestion(quizData[currentQuestionIndex]);
     quizManager.answerChoices(quizData[currentQuestionIndex]);
-    handleCorrectAnswer(quizData[currentQuestionIndex])
+    displayQuestionCounter(quizData)
+    handleCorrectAnswer(quizData[currentQuestionIndex]);
     console.log("current question index:", currentQuestionIndex);
   };
-
-
 
   const handleNextQuestion = () => {
     currentQuestionIndex++;
     quizContainer.innerHTML = "";
-      displayQuiz();
-  }
+    displayQuiz();
+  };
+
   const startQuiz = async () => {
     if (quizData.length === 0) {
       console.error("Failed to fetch data");
@@ -86,11 +111,10 @@ export const displayLogic = () => {
     }
     const button = document.querySelector(".start-button");
     button.remove();
-    currentQuestionIndex = 0
+    currentQuestionIndex = 0;
     displayNextButton();
     displayQuiz(quizData);
   };
-
 
   return { startQuizButton, displayQuiz, fetchApiData };
 };

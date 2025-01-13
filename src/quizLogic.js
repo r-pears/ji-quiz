@@ -65,5 +65,6 @@ export const quizLogic = () => {
     quizContainer.appendChild(questionP);
   };
 
+
   return { fetchQuiz, quizQuestion, answerChoices };
 };
