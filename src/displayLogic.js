@@ -8,41 +8,69 @@ export const displayLogic = () => {
   let quizData = [];
   const quizManager = quizLogic();
 
-  const incrementIndex = () => currentQuestionIndex++;
-  const setIncrementIndex = () => currentQuestionIndex;
+  const fetchApiData = async () => {
+    quizData = await quizManager.fetchQuiz();
+    console.log("quiz data:", quizData);
+  };
 
-  const displayButton = () => {
+  const startQuizButton = async () => {
     const button = document.createElement("button");
-    button.classList.toggle("game-button");
+    button.classList.toggle("start-button");
     button.textContent = "Start";
 
     const buttonContainer = document.createElement("div");
     buttonContainer.classList.toggle("button-container");
-    quizContainer.appendChild(buttonContainer);
+    quizContainer.insertAdjacentElement('afterend', buttonContainer);
     buttonContainer.appendChild(button);
+
+    await fetchApiData();
+    button.addEventListener("click", startQuiz);
   };
 
-  const startQuiz = async () => {
-    displayButton();
+  const displayNextButton = () => {
+    const nextButton = document.createElement("button");
+    nextButton.classList.toggle("next-button");
+    nextButton.textContent = "Next";
+
+    const buttonContainer = document.querySelector(".button-container");
+    buttonContainer.appendChild(nextButton);
+
+    nextButton.addEventListener("click", handleNextQuestion)
+  };
+
+  const displayQuiz = () => {
     gameStart = true;
-    quizData = await quizManager.fetchQuiz();
-    console.log("quiz data:", quizData);
+    console.log("game started:", gameStart);
+    
+    if (currentQuestionIndex >= quizData.length ) {
+      quizContainer.innerHTML = ""
+      quizContainer.textContent = "Quiz ended!"
+      return
+    }
+
+    quizManager.quizQuestion(quizData[currentQuestionIndex]);
+    quizManager.answerChoices(quizData[currentQuestionIndex]);
+
+    console.log("current question index:", currentQuestionIndex);
+  };
+
+  const handleNextQuestion = () => {
+    currentQuestionIndex++;
+    quizContainer.innerHTML = "";
+      displayQuiz();
+  }
+  const startQuiz = async () => {
+    if (quizData.length === 0) {
+      console.error("Failed to fetch data");
+      return;
+    }
+    const button = document.querySelector(".start-button");
+    button.remove();
+    currentQuestionIndex = 0
+    displayNextButton();
     displayQuiz(quizData);
   };
 
-  const displayQuiz = (data) => {
-    quizContainer.addEventListener("click", () => {
-      console.log("game started:", gameStart);
 
-      quizManager.quizQuestion(data)
-      quizManager.answerChoices(data);
-
-      const nextButton = document.querySelector(".game-button");
-      nextButton.textContent = "Next";
-
-      console.log("current question index:", currentQuestionIndex);
-    });
-  };
-
-  return { startQuiz, displayQuiz };
+  return { startQuizButton, displayQuiz, fetchApiData };
 };

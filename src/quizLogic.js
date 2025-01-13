@@ -3,9 +3,6 @@ import { fetchLogic } from "./fetchLogic";
 export const quizLogic = () => {
   const quizContainer = document.getElementById("quiz-container");
   let answers = [];
-  let currentQuestionIndex = 0;
-  const incrementIndex = () => currentQuestionIndex++;
-  const setIncrementIndex = () => currentQuestionIndex;
 
   const fetchQuiz = async () => {
     const apiUrl =
@@ -18,51 +15,57 @@ export const quizLogic = () => {
   };
 
   const shuffleArray = (array) => {
-    console.log("Input array:", array); // Log input
     if (!Array.isArray(array)) {
       console.error("Input is not an array");
       return [];
     }
     const newArray = [...array];
-  for (let i = newArray.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-  }
-  console.log("Shuffled array:", newArray); // Log output
-  return newArray;
+    for (let i = newArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+    }
+
+    return newArray;
+  };
+
+  const displayAnswerChoices = (array) => {
+    array.forEach((item) => {
+      const answerP = document.createElement("p");
+      answerP.classList.toggle("answer-choice");
+      answerP.textContent = item;
+      console.log("answer", answerP.textContent);
+      // const questionContainer = document.querySelector(".question-container");
+      quizContainer.appendChild(answerP);
+
+    });
   };
 
   const answerChoices = (data) => {
-    const currentQuestion = data[currentQuestionIndex];
-    console.log(`question # ${currentQuestionIndex}:`, currentQuestion);
-
-    const wrongAnswers = currentQuestion.incorrect_answers;
+    const wrongAnswers = data.incorrect_answers;
     console.log("wrong answer choices", wrongAnswers);
 
-    const rightAnswer = currentQuestion.correct_answer;
+    const rightAnswer = data.correct_answer;
     console.log("right answer", rightAnswer);
 
     answers = [...wrongAnswers, rightAnswer];
     console.log(answers);
 
     const shuffledAnswers = shuffleArray(answers);
-    console.log(shuffledAnswers);
 
-    incrementIndex();
-    setIncrementIndex();
+    displayAnswerChoices(shuffledAnswers);
   };
 
   const quizQuestion = (data) => {
-    const currentQuestion = data[currentQuestionIndex];
-
-    const questionDiv = document.createElement("div");
-    const firstChild = document.querySelector(".button-container");
-    questionDiv.classList.toggle("question-container");
+    // const questionDiv = document.createElement("div");
+    // const firstChild = document.querySelector(".button-container");
+    // questionDiv.classList.toggle("question-container");
     const questionP = document.createElement("p");
+    questionP.classList.toggle("question-p")
 
-    questionP.textContent = currentQuestion.question;
-    quizContainer.insertBefore(questionDiv, firstChild);
-    questionDiv.appendChild(questionP);
+    questionP.textContent = data.question;
+    // quizContainer.insertBefore(questionDiv, firstChild);
+    // questionDiv.appendChild(questionP);
+    quizContainer.appendChild(questionP)
   };
 
   return { fetchQuiz, quizQuestion, answerChoices };
