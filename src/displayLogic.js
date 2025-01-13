@@ -38,6 +38,24 @@ export const displayLogic = () => {
     nextButton.addEventListener("click", handleNextQuestion)
   };
 
+  const handleCorrectAnswer = (data) => {
+    const answerItems = document.querySelectorAll(".answer-choice")
+    console.log("answer choices:", answerItems)
+
+    answerItems.forEach((item) => {
+      item.addEventListener("click", () => {
+        const answerValue = item.textContent
+        console.log("answer value:", answerValue)
+        if (answerValue === data.correct_answer) {
+          console.log("correct answer")
+        } else {
+          console.log("incorrect answer")
+        }
+      })
+    
+  })
+  }
+
   const displayQuiz = () => {
     gameStart = true;
     console.log("game started:", gameStart);
@@ -50,9 +68,11 @@ export const displayLogic = () => {
 
     quizManager.quizQuestion(quizData[currentQuestionIndex]);
     quizManager.answerChoices(quizData[currentQuestionIndex]);
-
+    handleCorrectAnswer(quizData[currentQuestionIndex])
     console.log("current question index:", currentQuestionIndex);
   };
+
+
 
   const handleNextQuestion = () => {
     currentQuestionIndex++;

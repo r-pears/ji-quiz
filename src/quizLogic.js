@@ -30,15 +30,18 @@ export const quizLogic = () => {
 
   const displayAnswerChoices = (array) => {
     array.forEach((item) => {
-      const answerP = document.createElement("p");
-      answerP.classList.toggle("answer-choice");
-      answerP.textContent = item;
-      console.log("answer", answerP.textContent);
-      // const questionContainer = document.querySelector(".question-container");
-      quizContainer.appendChild(answerP);
+      const ul = document.createElement("ul")
+      const listItem= document.createElement("li");
+      listItem.classList.toggle("answer-choice");
+      listItem.textContent = item;
+      console.log("answer", listItem.textContent);
+      ul.appendChild(listItem)
+      quizContainer.appendChild(ul);
 
     });
   };
+
+  
 
   const answerChoices = (data) => {
     const wrongAnswers = data.incorrect_answers;
@@ -56,16 +59,10 @@ export const quizLogic = () => {
   };
 
   const quizQuestion = (data) => {
-    // const questionDiv = document.createElement("div");
-    // const firstChild = document.querySelector(".button-container");
-    // questionDiv.classList.toggle("question-container");
     const questionP = document.createElement("p");
-    questionP.classList.toggle("question-p")
-
+    questionP.classList.toggle("question-p");
     questionP.textContent = data.question;
-    // quizContainer.insertBefore(questionDiv, firstChild);
-    // questionDiv.appendChild(questionP);
-    quizContainer.appendChild(questionP)
+    quizContainer.appendChild(questionP);
   };
 
   return { fetchQuiz, quizQuestion, answerChoices };
