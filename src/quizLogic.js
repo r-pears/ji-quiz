@@ -14,18 +14,27 @@ export const quizLogic = () => {
     const fetchManager = fetchLogic();
     const data = await fetchManager.fetchData(apiUrl);
     const results = data.results;
-    console.log(results);
     return results;
+  };
+
+  const shuffleArray = (array) => {
+    console.log("Input array:", array); // Log input
+    if (!Array.isArray(array)) {
+      console.error("Input is not an array");
+      return [];
+    }
+    const newArray = [...array];
+  for (let i = newArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+  }
+  console.log("Shuffled array:", newArray); // Log output
+  return newArray;
   };
 
   const answerChoices = (data) => {
     const currentQuestion = data[currentQuestionIndex];
     console.log(`question # ${currentQuestionIndex}:`, currentQuestion);
-
-    const question = document.createElement("p");
-    question.classList.toggle("question");
-    question.textContent = currentQuestion.question;
-    quizContainer.before(question);
 
     const wrongAnswers = currentQuestion.incorrect_answers;
     console.log("wrong answer choices", wrongAnswers);
@@ -34,11 +43,27 @@ export const quizLogic = () => {
     console.log("right answer", rightAnswer);
 
     answers = [...wrongAnswers, rightAnswer];
-    console.log("answer array:", answers);
+    console.log(answers);
+
+    const shuffledAnswers = shuffleArray(answers);
+    console.log(shuffledAnswers);
 
     incrementIndex();
     setIncrementIndex();
   };
 
-  return { fetchQuiz, answerChoices };
+  const quizQuestion = (data) => {
+    const currentQuestion = data[currentQuestionIndex];
+
+    const questionDiv = document.createElement("div");
+    const firstChild = document.querySelector(".button-container");
+    questionDiv.classList.toggle("question-container");
+    const questionP = document.createElement("p");
+
+    questionP.textContent = currentQuestion.question;
+    quizContainer.insertBefore(questionDiv, firstChild);
+    questionDiv.appendChild(questionP);
+  };
+
+  return { fetchQuiz, quizQuestion, answerChoices };
 };

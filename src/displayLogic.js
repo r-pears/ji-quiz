@@ -34,13 +34,12 @@ export const displayLogic = () => {
     quizContainer.addEventListener("click", () => {
       console.log("game started:", gameStart);
 
+      quizManager.quizQuestion(data)
       quizManager.answerChoices(data);
 
       const nextButton = document.querySelector(".game-button");
       nextButton.textContent = "Next";
 
-      incrementIndex();
-      setIncrementIndex();
       console.log("current question index:", currentQuestionIndex);
     });
   };
