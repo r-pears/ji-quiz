@@ -1,24 +1,18 @@
-
 export const fetchLogic = () => {
-  
-
-  const fetchData = async(url) => {
-    
-
+  const fetchData = async (url) => {
     try {
-      const response = await fetch(url)
+      const response = await fetch(url);
       if (!response.ok) {
-        throw new Error("Failed to fetch data")
+        throw new Error("Failed to fetch data");
       }
 
-      const data = await response.json()
-      console.log("parsed data from fetch:", data)
-      return data
-    } catch (error){
+      const data = await response.json();
+      console.log("parsed data from fetch:", data);
+      return data;
+    } catch (error) {
       console.error("Error fetching data:", error.message);
-
     }
-  }
+  };
 
-  return { fetchData }
+  return { fetchData };
 };

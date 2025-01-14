@@ -8,6 +8,7 @@ export const displayLogic = () => {
   let quizData = [];
   const quizManager = quizLogic();
   let counterElement;
+  let score = [];
 
   const fetchApiData = async () => {
     quizData = await quizManager.fetchQuiz();
@@ -58,6 +59,8 @@ export const displayLogic = () => {
         item.classList.toggle("incorrect");
       }
       answerSelected = true;
+
+      displayScoreCounter(data);
     };
 
     answerItems.forEach((item) => {
@@ -74,13 +77,36 @@ export const displayLogic = () => {
 
   const displayQuestionCounter = (data) => {
     if (!counterElement) {
-      createQuestionCounter()
+      createQuestionCounter();
     }
-    const counter = document.querySelector(".counter")
+    const counter = document.querySelector(".counter");
     counter.textContent = `${currentQuestionIndex + 1} / ${data.length}`;
+  };
 
+  const createScoreCounter = () => {
+    const pageContainer = document.querySelector(".page-container");
+    const scoreCounter = document.createElement("p");
+    scoreCounter.classList.add("score");
+    pageContainer.appendChild(scoreCounter);
+  };
 
-  }
+  const displayScoreCounter = (data) => {
+    if (!document.querySelector(".score")) {
+      createScoreCounter();
+    }
+
+    const correctAnswer = document.querySelector(".correct");
+
+    if (correctAnswer) {
+      score.push(correctAnswer.textContent);
+      console.log("correct answer", correctAnswer.textContent);
+    }
+    console.log("score:", score);
+    const counter = document.querySelector(".score");
+
+    counter.textContent = `Score: ${score.length}`;
+  };
+
   const displayQuiz = () => {
     gameStart = true;
     console.log("game started:", gameStart);
@@ -93,8 +119,9 @@ export const displayLogic = () => {
 
     quizManager.quizQuestion(quizData[currentQuestionIndex]);
     quizManager.answerChoices(quizData[currentQuestionIndex]);
-    displayQuestionCounter(quizData)
+    displayQuestionCounter(quizData);
     handleCorrectAnswer(quizData[currentQuestionIndex]);
+    displayScoreCounter(quizData[currentQuestionIndex]);
     console.log("current question index:", currentQuestionIndex);
   };
 

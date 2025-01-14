@@ -11,6 +11,7 @@ export const quizLogic = () => {
     const fetchManager = fetchLogic();
     const data = await fetchManager.fetchData(apiUrl);
     const results = data.results;
+
     return results;
   };
 
@@ -30,18 +31,15 @@ export const quizLogic = () => {
 
   const displayAnswerChoices = (array) => {
     array.forEach((item) => {
-      const ul = document.createElement("ul")
-      const listItem= document.createElement("li");
+      const ul = document.createElement("ul");
+      const listItem = document.createElement("li");
       listItem.classList.toggle("answer-choice");
       listItem.textContent = item;
       console.log("answer", listItem.textContent);
-      ul.appendChild(listItem)
+      ul.appendChild(listItem);
       quizContainer.appendChild(ul);
-
     });
   };
-
-  
 
   const answerChoices = (data) => {
     const wrongAnswers = data.incorrect_answers;
@@ -65,6 +63,7 @@ export const quizLogic = () => {
     quizContainer.appendChild(questionP);
   };
 
+ 
 
   return { fetchQuiz, quizQuestion, answerChoices };
 };
