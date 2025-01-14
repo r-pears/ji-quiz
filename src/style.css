@@ -1,0 +1,85 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --main-bg-color: #f5f5f5;
+  --color-green: #2e5a27;
+  --color-lt-gray: #d1d1d1;
+  --color-md-gray: #847b7b;
+  --font-main: "Montserrat", serif;
+}
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+body {
+  background-color: var(--main-bg-color);
+  font-family: var(--font-main);
+  
+}
+
+.page-container {
+  width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+}
+
+h1 {
+  margin-top: 20px; 
+  margin-bottom: 40px;
+}
+
+#quiz-container {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.answer-choice {
+  list-style-type: none;
+  border: solid var(--color-lt-gray) 1px;
+  padding: 10px;
+  width: 300px;
+}
+
+.answer-choice:hover {
+  background-color: #aaa0a0; 
+  color: var(--main-bg-color)
+}
+
+.answer-choice.correct{
+  background-color: #74aa76; 
+  color: var(--main-bg-color);
+}
+
+.answer-choice.incorrect {
+  background-color: #cb5951; 
+  color: var(--main-bg-color) 
+}
+
+.button-container {
+  padding-top: 20px;
+}
+
+.next-button, .start-button {
+  border: none;
+  background-color: var(--color-green);
+  width: 100px;
+  padding: 10px;
+  border-radius: 10px;
+  color: var(--main-bg-color);
+  font-size: 1.2rem;
+}
