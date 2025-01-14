@@ -25,7 +25,6 @@ export const quizLogic = () => {
       const j = Math.floor(Math.random() * (i + 1));
       [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
     }
-
     return newArray;
   };
 
@@ -33,7 +32,7 @@ export const quizLogic = () => {
     array.forEach((item) => {
       const ul = document.createElement("ul");
       const listItem = document.createElement("li");
-      listItem.classList.toggle("answer-choice");
+      listItem.classList.add("answer-choice");
       listItem.textContent = item;
       console.log("answer", listItem.textContent);
       ul.appendChild(listItem);
@@ -57,13 +56,14 @@ export const quizLogic = () => {
   };
 
   const quizQuestion = (data) => {
+
     const questionP = document.createElement("p");
     questionP.classList.toggle("question-p");
     questionP.textContent = data.question;
     quizContainer.appendChild(questionP);
   };
 
- 
+  const restartQuiz = () => {};
 
   return { fetchQuiz, quizQuestion, answerChoices };
 };

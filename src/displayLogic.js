@@ -1,4 +1,3 @@
-import { fetchLogic } from "./fetchLogic";
 import { quizLogic } from "./quizLogic";
 
 export const displayLogic = () => {
@@ -7,7 +6,6 @@ export const displayLogic = () => {
   let currentQuestionIndex = 0;
   let quizData = [];
   const quizManager = quizLogic();
-  let counterElement;
   let score = [];
 
   const fetchApiData = async () => {
@@ -16,8 +14,9 @@ export const displayLogic = () => {
   };
 
   const startQuizButton = async () => {
+    quizContainer.innerHTML = ""
     const button = document.createElement("button");
-    button.classList.toggle("start-button");
+    button.classList.add("start-button");
     button.textContent = "Start";
 
     const buttonContainer = document.createElement("div");
@@ -29,10 +28,10 @@ export const displayLogic = () => {
     button.addEventListener("click", startQuiz);
   };
 
-  const displayNextButton = () => {
+  const displayNextButton = (text) => {
     const nextButton = document.createElement("button");
     nextButton.classList.toggle("next-button");
-    nextButton.textContent = "Next";
+    nextButton.textContent = text;
 
     const buttonContainer = document.querySelector(".button-container");
     buttonContainer.appendChild(nextButton);
@@ -76,9 +75,7 @@ export const displayLogic = () => {
   };
 
   const displayQuestionCounter = (data) => {
-    if (!counterElement) {
-      createQuestionCounter();
-    }
+    createQuestionCounter()
     const counter = document.querySelector(".counter");
     counter.textContent = `${currentQuestionIndex + 1} / ${data.length}`;
   };
@@ -114,6 +111,10 @@ export const displayLogic = () => {
     if (currentQuestionIndex >= quizData.length) {
       quizContainer.innerHTML = "";
       quizContainer.textContent = "Quiz ended!";
+      const button = document.querySelector(".next-button")
+      button.remove()
+      score.length = 0
+      startQuizButton()
       return;
     }
 
@@ -139,7 +140,7 @@ export const displayLogic = () => {
     const button = document.querySelector(".start-button");
     button.remove();
     currentQuestionIndex = 0;
-    displayNextButton();
+    displayNextButton("Next");
     displayQuiz(quizData);
   };
 
