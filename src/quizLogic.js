@@ -34,7 +34,6 @@ export const quizLogic = () => {
       const listItem = document.createElement("li");
       listItem.classList.add("answer-choice");
       listItem.textContent = item;
-      console.log("answer", listItem.textContent);
       ul.appendChild(listItem);
       quizContainer.appendChild(ul);
     });
@@ -42,28 +41,20 @@ export const quizLogic = () => {
 
   const answerChoices = (data) => {
     const wrongAnswers = data.incorrect_answers;
-    console.log("wrong answer choices", wrongAnswers);
-
     const rightAnswer = data.correct_answer;
-    console.log("right answer", rightAnswer);
 
     answers = [...wrongAnswers, rightAnswer];
-    console.log(answers);
-
     const shuffledAnswers = shuffleArray(answers);
 
     displayAnswerChoices(shuffledAnswers);
   };
 
   const quizQuestion = (data) => {
-
     const questionP = document.createElement("p");
     questionP.classList.toggle("question-p");
     questionP.textContent = data.question;
     quizContainer.appendChild(questionP);
   };
-
-  const restartQuiz = () => {};
 
   return { fetchQuiz, quizQuestion, answerChoices };
 };

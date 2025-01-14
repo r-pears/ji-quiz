@@ -10,11 +10,10 @@ export const displayLogic = () => {
 
   const fetchApiData = async () => {
     quizData = await quizManager.fetchQuiz();
-    console.log("quiz data:", quizData);
   };
 
   const startQuizButton = async () => {
-    quizContainer.innerHTML = ""
+    
     const button = document.createElement("button");
     button.classList.add("start-button");
     button.textContent = "Start";
@@ -25,6 +24,7 @@ export const displayLogic = () => {
     buttonContainer.appendChild(button);
 
     await fetchApiData();
+    
     button.addEventListener("click", startQuiz);
   };
 
@@ -41,20 +41,16 @@ export const displayLogic = () => {
 
   const handleCorrectAnswer = (data) => {
     const answerItems = document.querySelectorAll(".answer-choice");
-    console.log("answer choices:", answerItems);
     let answerSelected = false;
 
     const handleClick = (item) => {
       if (answerSelected) return;
 
       const answerValue = item.textContent;
-      console.log("answer value:", answerValue);
 
       if (answerValue === data.correct_answer) {
-        console.log("correct answer");
         item.classList.toggle("correct");
       } else {
-        console.log("incorrect answer");
         item.classList.toggle("incorrect");
       }
       answerSelected = true;
@@ -93,23 +89,18 @@ export const displayLogic = () => {
     }
 
     const correctAnswer = document.querySelector(".correct");
-
     if (correctAnswer) {
       score.push(correctAnswer.textContent);
-      console.log("correct answer", correctAnswer.textContent);
     }
-    console.log("score:", score);
-    const counter = document.querySelector(".score");
 
+    const counter = document.querySelector(".score");
     counter.textContent = `Score: ${score.length}`;
   };
 
   const displayQuiz = () => {
     gameStart = true;
-    console.log("game started:", gameStart);
 
     if (currentQuestionIndex >= quizData.length) {
-      quizContainer.innerHTML = "";
       quizContainer.textContent = "Quiz ended!";
       const button = document.querySelector(".next-button")
       button.remove()
@@ -123,7 +114,6 @@ export const displayLogic = () => {
     displayQuestionCounter(quizData);
     handleCorrectAnswer(quizData[currentQuestionIndex]);
     displayScoreCounter(quizData[currentQuestionIndex]);
-    console.log("current question index:", currentQuestionIndex);
   };
 
   const handleNextQuestion = () => {
@@ -139,6 +129,7 @@ export const displayLogic = () => {
     }
     const button = document.querySelector(".start-button");
     button.remove();
+    quizContainer.innerHTML = ""
     currentQuestionIndex = 0;
     displayNextButton("Next");
     displayQuiz(quizData);
