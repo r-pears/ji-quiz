@@ -2,6 +2,7 @@ import { quizLogic } from "./quizLogic";
 
 export const displayLogic = () => {
   const quizContainer = document.getElementById("quiz-container");
+  const buttonContainer = document.querySelector(".button-container")
   let gameStart = false;
   let currentQuestionIndex = 0;
   let quizData = [];
@@ -24,7 +25,7 @@ export const displayLogic = () => {
     buttonContainer.appendChild(button);
 
     await fetchApiData();
-    
+
     button.addEventListener("click", startQuiz);
   };
 
@@ -119,6 +120,7 @@ export const displayLogic = () => {
   const handleNextQuestion = () => {
     currentQuestionIndex++;
     quizContainer.innerHTML = "";
+
     displayQuiz();
   };
 
