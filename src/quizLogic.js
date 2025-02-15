@@ -29,14 +29,19 @@ export const quizLogic = () => {
   };
 
   const displayAnswerChoices = (array) => {
-    array.forEach((item) => {
-      const ul = document.createElement("ul");
+    // could use a fragment to minizmie repaints and reflows
+    const fragment = document.createDocumentFragment();
+    const ul = document.createElement("ul");
+
+    array.forEach((choice) => {
       const listItem = document.createElement("li");
       listItem.classList.add("answer-choice");
-      listItem.textContent = item;
+      listItem.textContent = choice;
       ul.appendChild(listItem);
-      quizContainer.appendChild(ul);
     });
+
+    fragment.appendChild(ul);
+    quizContainer.appendChild(fragment);
   };
 
   const answerChoices = (data) => {

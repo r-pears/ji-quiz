@@ -5,9 +5,8 @@ export const fetchLogic = () => {
       if (!response.ok) {
         throw new Error("Failed to fetch data");
       }
-
       const data = await response.json();
-      console.log("parsed data from fetch:", data);
+      // preferably remove console.log in production code
       return data;
     } catch (error) {
       console.error("Error fetching data:", error.message);

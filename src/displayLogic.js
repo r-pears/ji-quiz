@@ -2,7 +2,7 @@ import { quizLogic } from "./quizLogic";
 
 export const displayLogic = () => {
   const quizContainer = document.getElementById("quiz-container");
-  const buttonContainer = document.querySelector(".button-container")
+  // delete unused variable
   let gameStart = false;
   let currentQuestionIndex = 0;
   let quizData = [];
@@ -13,80 +13,77 @@ export const displayLogic = () => {
     quizData = await quizManager.fetchQuiz();
   };
 
-  const startQuizButton = async () => {
-    
+  // create a separate function for creating buttons
+  const createButton = (className, textContent, onClick) => {
     const button = document.createElement("button");
-    button.classList.add("start-button");
-    button.textContent = "Start";
+    button.classList.add(className);
+    button.textContent = textContent;
+    button.addEventListener("click", onClick);
+    return button;
+  };
 
+  const startQuizButton = async () => {
     const buttonContainer = document.createElement("div");
-    buttonContainer.classList.toggle("button-container");
+    buttonContainer.classList.add("button-container");
     quizContainer.insertAdjacentElement("afterend", buttonContainer);
-    buttonContainer.appendChild(button);
+    // function call to create start button with a separate function
+    const startButton = createButton("start-button", "Start", startQuiz);
+    buttonContainer.appendChild(startButton);
 
     await fetchApiData();
-
-    button.addEventListener("click", startQuiz);
   };
 
   const displayNextButton = (text) => {
-    const nextButton = document.createElement("button");
-    nextButton.classList.toggle("next-button");
-    nextButton.textContent = text;
-
     const buttonContainer = document.querySelector(".button-container");
+    // function call to create next button with a separate function
+    const nextButton = createButton("next-button", text, handleNextQuestion);
     buttonContainer.appendChild(nextButton);
-
-    nextButton.addEventListener("click", handleNextQuestion);
   };
 
   const handleCorrectAnswer = (data) => {
     const answerItems = document.querySelectorAll(".answer-choice");
     let answerSelected = false;
 
-    const handleClick = (item) => {
-      if (answerSelected) return;
-
-      const answerValue = item.textContent;
-
-      if (answerValue === data.correct_answer) {
-        item.classList.toggle("correct");
-      } else {
-        item.classList.toggle("incorrect");
-      }
-      answerSelected = true;
-
-      displayScoreCounter(data);
-    };
-
     answerItems.forEach((item) => {
-      item.addEventListener("click", () => handleClick(item));
+      // refactor for better readability
+      item.addEventListener("click", () => {
+        if (answerSelected) return;
+
+        item.classList.toggle(
+          // refactor to turnery operator for better readability
+          item.textContent === data.correct_answer ? "correct" : "incorrect"
+        );
+        answerSelected = true;
+
+        displayScoreCounter(data);
+      });
     });
   };
 
-  const createQuestionCounter = () => {
+  // create a function for reusable code
+  const createCounter = (className) => {
     const pageContainer = document.querySelector(".page-container");
     const counter = document.createElement("p");
-    counter.classList.toggle("counter");
+    // refactor to use classList.add for better readability
+    counter.classList.add(className);
     pageContainer.appendChild(counter);
   };
 
   const displayQuestionCounter = (data) => {
-    createQuestionCounter()
+    // refactor to check if counter exists before creating it
+    if (!document.querySelector(".counter")) {
+      createCounter("counter");
+    }
     const counter = document.querySelector(".counter");
     counter.textContent = `${currentQuestionIndex + 1} / ${data.length}`;
   };
 
-  const createScoreCounter = () => {
-    const pageContainer = document.querySelector(".page-container");
-    const scoreCounter = document.createElement("p");
-    scoreCounter.classList.add("score");
-    pageContainer.appendChild(scoreCounter);
-  };
+  // delete unused function in refactored code
 
   const displayScoreCounter = (data) => {
     if (!document.querySelector(".score")) {
-      createScoreCounter();
+      // use the new createCounter function
+      createCounter("score");
     }
 
     const correctAnswer = document.querySelector(".correct");
@@ -103,10 +100,10 @@ export const displayLogic = () => {
 
     if (currentQuestionIndex >= quizData.length) {
       quizContainer.textContent = "Quiz ended!";
-      const button = document.querySelector(".next-button")
-      button.remove()
-      score.length = 0
-      startQuizButton()
+      // one line to remove next button
+      document.querySelector(".next-button").remove();
+      score.length = 0;
+      startQuizButton();
       return;
     }
 
@@ -119,7 +116,8 @@ export const displayLogic = () => {
 
   const handleNextQuestion = () => {
     currentQuestionIndex++;
-    quizContainer.innerHTML = "";
+    // textContent is better than innerHTML for security reasons
+    quizContainer.textContent = "";
 
     displayQuiz();
   };
@@ -129,9 +127,10 @@ export const displayLogic = () => {
       console.error("Failed to fetch data");
       return;
     }
-    const button = document.querySelector(".start-button");
-    button.remove();
-    quizContainer.innerHTML = ""
+    // one line to remove start button
+    document.querySelector(".start-button").remove();
+    // textContent is better than innerHTML for security reasons
+    quizContainer.textContent = "";
     currentQuestionIndex = 0;
     displayNextButton("Next");
     displayQuiz(quizData);
