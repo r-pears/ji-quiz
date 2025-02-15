@@ -50,7 +50,7 @@ export const displayLogic = () => {
         if (answerSelected) return;
 
         item.classList.toggle(
-          // refactor to turnery operator for better readability
+          // refactor to ternary operator for better readability
           item.textContent === data.correct_answer ? "correct" : "incorrect"
         );
         answerSelected = true;
