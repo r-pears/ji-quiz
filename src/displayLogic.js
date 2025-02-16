@@ -8,6 +8,7 @@ export const displayLogic = () => {
   let quizData = [];
   const quizManager = quizLogic();
   let score = [];
+  let answerSelected = false;
 
   const fetchApiData = async () => {
     quizData = await quizManager.fetchQuiz();
@@ -37,17 +38,21 @@ export const displayLogic = () => {
     const buttonContainer = document.querySelector(".button-container");
     buttonContainer.appendChild(nextButton);
 
-    nextButton.addEventListener("click", handleNextQuestion);
+   
+
+      nextButton.addEventListener("click", handleNextQuestion);
+    
   };
 
   const handleCorrectAnswer = (data) => {
     const answerItems = document.querySelectorAll(".answer-choice");
-    let answerSelected = false;
+    answerSelected = false;
 
     const handleClick = (item) => {
       if (answerSelected) return;
 
       const answerValue = item.textContent;
+      console.log(answerValue)
 
       if (answerValue === data.correct_answer) {
         item.classList.toggle("correct");
@@ -118,10 +123,13 @@ export const displayLogic = () => {
   };
 
   const handleNextQuestion = () => {
-    currentQuestionIndex++;
+    if (answerSelected) {
+      currentQuestionIndex++;
     quizContainer.innerHTML = "";
 
     displayQuiz();
+    }
+  
   };
 
   const startQuiz = async () => {
