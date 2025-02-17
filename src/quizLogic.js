@@ -1,4 +1,5 @@
 import { fetchLogic } from "./fetchLogic";
+import he from "he"
 
 export const quizLogic = () => {
   const quizContainer = document.getElementById("quiz-container");
@@ -12,7 +13,14 @@ export const quizLogic = () => {
     const data = await fetchManager.fetchData(apiUrl);
     const results = data.results;
 
-    return results;
+    const decodedResults = results.map((result) => ({
+      ...result,
+      question: he.decode(result.question),
+    correct_answer: he.decode(result.correct_answer),
+    incorrect_answers: result.incorrect_answers.map(answer => he.decode(answer))
+    }))
+
+    return decodedResults;
   };
 
   const shuffleArray = (array) => {
